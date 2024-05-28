@@ -1,14 +1,50 @@
-<!-- templates/result.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Results</title>
   </head>
   <body>
-    <h1>Embedding Results</h1>
+    <h1>Results</h1>
     <p>PSNR: {{ psnr }}</p>
     <p>SSIM: {{ ssim }}</p>
+    <div>
+      <canvas id="metricsChart"></canvas>
+    </div>
+    <script>
+        var psnr = {{ psnr }};
+        var ssim = {{ ssim }};
+
+      var ctx = document.getElementById('metricsChart').getContext('2d');
+
+      var metricsChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ["PSNR", "SSIM"],
+              datasets: [{
+                  label: 'Metrics',
+                  data: [psnr, ssim],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+    </script>
   </body>
 </html>

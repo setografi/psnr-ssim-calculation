@@ -13,37 +13,41 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
+    if 'original_file' not in request.files or 'steganography_file' not in request.files:
         return 'No file part'
-    file = request.files['file']
-    if file.filename == '':
+    
+    original_file = request.files['original_file']
+    steganography_file = request.files['steganography_file']
+    
+    if original_file.filename == '' or steganography_file.filename == '':
         return 'No selected file'
-    if file:
-        # Simpan file
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-
+    
+    if original_file and steganography_file:
+        original_file_path = os.path.join(app.config['UPLOAD_FOLDER'], original_file.filename)
+        steganography_file_path = os.path.join(app.config['UPLOAD_FOLDER'], steganography_file.filename)
+        
+        original_file.save(original_file_path)
+        steganography_file.save(steganography_file_path)
+        
         # Baca gambar sebagai numpy array
-        image = read_image(file_path)
-
-        # Proses embedding teks ke dalam gambar (dummy function)
-        encrypted_image = embed_text_into_image(image, "Your text here")
-
+        original_image = read_image(original_file_path)
+        steganography_image = read_image(steganography_file_path)
+        
         # Hitung PSNR dan SSIM
-        psnr_value = calculate_psnr(image, encrypted_image)
-        ssim_value = calculate_ssim(image, encrypted_image)
+        psnr = calculate_psnr(original_image, steganography_image)
+        ssim = calculate_ssim(original_image, steganography_image)
+        
+        # Membulatkan hasil PSNR dan SSIM
+        psnr = round(psnr, 3)
+        ssim = round(ssim, 3)
 
-        return render_template('result.html', psnr=psnr_value, ssim=ssim_value)
+        return render_template('result.html', psnr=psnr, ssim=ssim)
 
 def read_image(file_path):
     # Menggunakan Pillow untuk membaca gambar
     img = Image.open(file_path)
     img = img.convert('RGB')  # Konversi gambar menjadi RGB
     return np.array(img)
-
-def embed_text_into_image(image, text):
-    # Implementasi dummy, ganti dengan fungsi embedding yang sebenarnya
-    return image
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

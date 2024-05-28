@@ -1,18 +1,32 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload Image</title>
+    <title>Upload Images</title>
   </head>
   <body>
-    <h1>Upload Image for PSNR and SSIM Calculation</h1>
+    <h1>Upload Images for PSNR and SSIM Calculation</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
-      <label for="file">Select image to upload:</label>
-      <input type="file" name="file" id="file" accept="image/*" required />
+      <label for="original_file">Select original image:</label>
+      <input
+        type="file"
+        name="original_file"
+        id="original_file"
+        accept="image/*"
+        required
+      />
       <br /><br />
-      <button type="submit">Upload Image</button>
+      <label for="steganography_file">Select steganography image:</label>
+      <input
+        type="file"
+        name="steganography_file"
+        id="steganography_file"
+        accept="image/*"
+        required
+      />
+      <br /><br />
+      <button type="submit">Upload Images</button>
     </form>
   </body>
 </html>
